@@ -32,7 +32,7 @@ const PORT = process.env.PORT || 8080;
 
   app.get("/qr", (req, res) => {
     const qrBase64 = fs.readFileSync(`${path.join(process.cwd(), "qr.txt")}`, "utf-8");
-    res.send(`<img src="${qrBase64}" width="750" height="750">`);
+    res.send(`<img src="${qrBase64}" width="450" height="450">`);
   })
 
   app.listen(PORT, () => {
