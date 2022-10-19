@@ -1,8 +1,10 @@
 require("dotenv").config();
 const express = require("express");
+const fs = require("fs");
 const WA = require("./lib/whatsapp");
 const FIREBASE = require("./lib/firebase");
 const controller = require("./controller/all");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -27,6 +29,11 @@ const PORT = process.env.PORT || 8080;
   app.get("/cek-id", async (req, res) => {
     res.json(await controller.cekID(req.query["tag"]));
   });
+
+  app.get("/qr", (req, res) => {
+    const qrBase64 = fs.readFileSync(`${path.join(process.cwd(), "qr.txt")}`, "utf-8");
+    res.send(`<img src="${qrBase64}" width="750" height="750">`);
+  })
 
   app.listen(PORT, () => {
     console.log(`Listening to port: ${PORT}`);
