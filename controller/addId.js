@@ -6,7 +6,7 @@ async function addID(tag, WA) {
   if (add == 201) {
     await WA.sendMSG(
       "6285311174928",
-      `*Data baru telah ditambahkan!*\n\nDengan data sebgai berikut:\nID: ${req.query["tag"]}\nNama: -\nKelas: -`
+      `*Data baru telah ditambahkan!*\n\nDengan data sebgai berikut:\nID: ${tag}\nNama: -\nKelas: -`
     );
     return {
       code: 201,
