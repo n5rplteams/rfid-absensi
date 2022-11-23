@@ -1,7 +1,7 @@
-SDA      ------>    D4
-SCK      ------>    D5
-MOSI     ------>    D7
-MISO     ------>    D6
-GND      ------>    G
-RST      ------>    D3
-VCC      ------>    3V
+RST      ------>    D3      ------>    Kuning
+SDA      ------>    D4      ------>    Putih
+SCK      ------>    D5      ------>    Abu
+MISO     ------>    D6      ------>    Biru
+MOSI     ------>    D7      ------>    Ungu
+GND      ------>    G       ------>    Hijau
+VCC      ------>    3V      ------>    Oranye
