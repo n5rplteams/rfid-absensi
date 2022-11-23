@@ -114,7 +114,7 @@ class Controller {
           (
             await get(
               query(
-                ref(this.Firebase.firebaseDb, "siswa"),
+                ref(this.Firebase.firebaseDb, "pegawai"),
                 orderByChild("id_card"),
                 equalTo(tag)
               )
@@ -124,11 +124,11 @@ class Controller {
         const status = this.Helper.getStatusAbsen(time.getTime());
         let text = "";
         if (status == 2) {
-          text = `*Siswa atas nama*\n${userData.nama} dari kelas ${
+          text = `*Pegawai atas nama*\n${userData.nama} dari kelas ${
             userData.kelas
           }\nTelah pulang pada hari ${this.Helper.getDay()} jam ${time.getHours()}:${time.getMinutes()}.`.trim();
         } else {
-          text = `*Siswa atas nama*\n${userData.nama} dari kelas ${
+          text = `*Pegawai atas nama*\n${userData.nama} dari kelas ${
             userData.kelas
           }\nTelah absen pada hari ${this.Helper.getDay()} jam ${time.getHours()}:${time.getMinutes()}.\nStatus absen: *${
             status == 1 ? "Tepat Waktu" : "Telat"
@@ -176,7 +176,7 @@ class Controller {
   }
 
   async getCSV() {
-    let get = Object.values(await this.Firebase.getDB("siswa"));
+    let get = Object.values(await this.Firebase.getDB("pegawai"));
     let laporanJSON = get.map((el) => {
       return {
         id: el.id,
@@ -246,7 +246,7 @@ class Controller {
   }
 
   async saveCSV() {
-    let get = Object.values(await this.Firebase.getDB("siswa"));
+    let get = Object.values(await this.Firebase.getDB("pegawai"));
     let laporanJSON = get.map((el) => {
       return {
         id: el.id,

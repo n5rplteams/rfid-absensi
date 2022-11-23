@@ -41,8 +41,8 @@ setInterval(async () => {
     new Date().getTime() > HELPER.getTime(12, 0) &&
     new Date().getTime() < (HELPER.getTime(12, 0) + 2000)
   ) {
-    let allSiswa = Object.values(await FIREBASE.getDB("siswa"));
-    allSiswa.forEach(async (el) => {
+    let allPegawai = Object.values(await FIREBASE.getDB("pegawai"));
+    allPegawai.forEach(async (el) => {
       let defaultAbsensi = {
         senin: {
           hadir: {
@@ -106,7 +106,7 @@ setInterval(async () => {
         },
       };
       el.absensi = defaultAbsensi;
-      await FIREBASE.updateDB(`siswa/${el.id}`, el);
+      await FIREBASE.updateDB(`pegawai/${el.id}`, el);
     });
   }
   

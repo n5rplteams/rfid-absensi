@@ -27,7 +27,7 @@ class Helper {
       try {
         let snapshot = await get(
           query(
-            ref(this.Firebase.firebaseDb, "siswa"),
+            ref(this.Firebase.firebaseDb, "pegawai"),
             orderByChild("id_card"),
             equalTo(tag)
           )
@@ -53,7 +53,7 @@ class Helper {
         let isAvailable = (
           await get(
             query(
-              ref(this.Firebase.firebaseDb, "siswa"),
+              ref(this.Firebase.firebaseDb, "pegawai"),
               orderByChild("id_card"),
               equalTo(tag)
             )
@@ -86,7 +86,7 @@ class Helper {
       try {
         let getQ = await get(
           query(
-            ref(this.Firebase.firebaseDb, "siswa"),
+            ref(this.Firebase.firebaseDb, "pegawai"),
             orderByChild("id_card"),
             equalTo(tag)
           )
@@ -103,7 +103,7 @@ class Helper {
                 ""
               ) {
                 await this.Firebase.updateDB(
-                  `siswa/${userId}/absensi/${this.getDay()}/hadir`,
+                  `pegawai/${userId}/absensi/${this.getDay()}/hadir`,
                   {
                     tanggal: `${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
                     jam: `${date.getHours()}:${date.getMinutes()}`,
@@ -125,7 +125,7 @@ class Helper {
                   .jam == ""
               ) {
                 await this.Firebase.updateDB(
-                  `siswa/${userId}/absensi/${this.getDay()}/pulang`,
+                  `pegawai/${userId}/absensi/${this.getDay()}/pulang`,
                   {
                     jam: `${date.getHours()}:${date.getMinutes()}`,
                     status: "pulang",
