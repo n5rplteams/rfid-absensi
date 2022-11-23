@@ -107,15 +107,14 @@ class WAClient extends WA.Client {
 
   async sendMSG(number, msg) {
     number = this.#phoneFormatter(number);
-    number = (await this.getNumberId(number))._serialized;
     let isRegistered = await this.#checkRegisteredNumber(number);
     if (isRegistered) {
-      console.log(number, msg);
-      this.sendMessage(`${number}@c.us`, msg);
-      // try {
-      // } catch (err) {
-      //   console.log(err);
-      // }
+      try {
+        console.log(number, msg);
+        await this.sendMessage(`${number}`, msg);
+      } catch (err) {
+        console.log(err);
+      }
     } else {
       console.log(`${number} is not registered.`);
     }

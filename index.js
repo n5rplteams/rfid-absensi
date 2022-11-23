@@ -12,7 +12,7 @@ dotenv.config();
 const WA = new WAClient({
   restartOnAuthFail: true,
   puppeteer: {
-    headless: true,
+    headless: false,
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -24,7 +24,7 @@ const WA = new WAClient({
       "--disable-gpu",
     ],
   },
-  authStrategy: new LocalAuth(),
+  authStrategy: new LocalAuth({clientId: "client"}),
 });
 
 const FIREBASE = new FirebaseClient();
