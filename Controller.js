@@ -109,7 +109,6 @@ class Controller {
     if (this.Helper.getDay()) {
       let time = new Date();
       const update = await this.Helper.absenId(tag, time.getTime());
-      console.log(update);
       if (update == 200) {
         const userData = Object.values(
           (

@@ -4,7 +4,8 @@ import FirebaseClient from "./FirebaseClient.js";
 import Helper from "./Helper.js";
 import Controller from "./Controller.js";
 import WA_WEB from "whatsapp-web.js";
-import * as qrcode from "qrcode-terminal";
+// import * as qrcode from "qrcode-terminal";
+import fetch from 'node-fetch';
 import { unlinkSync } from "fs";
 const { LocalAuth } = WA_WEB;
 import * as dotenv from "dotenv";
@@ -33,10 +34,12 @@ const HELPER = new Helper(FIREBASE, WA);
 const CONTROLLER = new Controller(FIREBASE, WA, HELPER);
 
 setInterval(async () => {
+  console.log(await (await fetch(process.env.PUBLIC_URI)).json());
   // Reset absen minggu jam 12 siang
   if (
     HELPER.getDay() == "minggu" &&
-    new Date().getTime() == HELPER.getTime(12, 0)
+    new Date().getTime() > HELPER.getTime(12, 0) &&
+    new Date().getTime() < (HELPER.getTime(12, 0) + 2000)
   ) {
     let allSiswa = Object.values(await FIREBASE.getDB("siswa"));
     allSiswa.forEach(async (el) => {
@@ -106,6 +109,7 @@ setInterval(async () => {
       await FIREBASE.updateDB(`siswa/${el.id}`, el);
     });
   }
+  
 }, 1000);
 
 (async () => {
@@ -113,6 +117,9 @@ setInterval(async () => {
     await FIREBASE.signIn();
     const app = express();
     const PORT = process.env.PORT || 8080;
+    app.get("/", (req, res) => {
+      res.json({ path: "/" });
+    });
     app.get("/get-mode", async (req, res) => {
       const d = await CONTROLLER.getMode();
       res.json(d);
