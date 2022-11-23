@@ -108,7 +108,6 @@ class Controller {
     console.log(tag);
     if (this.Helper.getDay()) {
       let time = new Date();
-      // let time = 1666216800000;
       const update = await this.Helper.absenId(tag, time.getTime());
       console.log(update);
       if (update == 200) {
@@ -132,13 +131,13 @@ class Controller {
         } else {
           text = `*Siswa atas nama*\n${userData.nama} dari kelas ${
             userData.kelas
-          }\nTelah absen pada hari ${this.Helper.getDay()} jam ${time.getHours()}:${time.getMinutes()}.
-              Status absen: *${status == 1 ? "Tepat Waktu" : "Telat"}*`.trim();
+          }\nTelah absen pada hari ${this.Helper.getDay()} jam ${time.getHours()}:${time.getMinutes()}.\nStatus absen: *${status == 1 ? "Tepat Waktu" : "Telat"}*`.trim();
         }
-        console.log(text);
+
         if (userData.tel_atasan) {
           this.WA.sendMSG(userData.tel_atasan, text);
         }
+
         return {
           code: 200,
           message: "Berhasil absen",

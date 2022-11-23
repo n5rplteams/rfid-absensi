@@ -4,6 +4,7 @@ import FirebaseClient from "./FirebaseClient.js";
 import Helper from "./Helper.js";
 import Controller from "./Controller.js";
 import WA_WEB from "whatsapp-web.js";
+import * as qrcode from "qrcode-terminal";
 import { unlinkSync } from "fs";
 const { LocalAuth } = WA_WEB;
 import * as dotenv from "dotenv";
@@ -12,7 +13,7 @@ dotenv.config();
 const WA = new WAClient({
   restartOnAuthFail: true,
   puppeteer: {
-    headless: false,
+    headless: true,
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
@@ -24,12 +25,88 @@ const WA = new WAClient({
       "--disable-gpu",
     ],
   },
-  authStrategy: new LocalAuth({clientId: "client"}),
+  authStrategy: new LocalAuth({ clientId: "client-1" }),
 });
 
 const FIREBASE = new FirebaseClient();
 const HELPER = new Helper(FIREBASE, WA);
 const CONTROLLER = new Controller(FIREBASE, WA, HELPER);
+
+setInterval(async () => {
+  // Reset absen minggu jam 12 siang
+  if (
+    HELPER.getDay() == "minggu" &&
+    new Date().getTime() == HELPER.getTime(12, 0)
+  ) {
+    let allSiswa = Object.values(await FIREBASE.getDB("siswa"));
+    allSiswa.forEach(async (el) => {
+      let defaultAbsensi = {
+        senin: {
+          hadir: {
+            tanggal: "",
+            jam: "",
+            status: "",
+          },
+          pulang: {
+            jam: "",
+          },
+        },
+        selasa: {
+          hadir: {
+            tanggal: "",
+            jam: "",
+            status: "",
+          },
+          pulang: {
+            jam: "",
+          },
+        },
+        rabu: {
+          hadir: {
+            tanggal: "",
+            jam: "",
+            status: "",
+          },
+          pulang: {
+            jam: "",
+          },
+        },
+        kamis: {
+          hadir: {
+            tanggal: "",
+            jam: "",
+            status: "",
+          },
+          pulang: {
+            jam: "",
+          },
+        },
+        jumat: {
+          hadir: {
+            tanggal: "",
+            jam: "",
+            status: "",
+          },
+          pulang: {
+            jam: "",
+          },
+        },
+        sabtu: {
+          hadir: {
+            tanggal: "",
+            jam: "",
+            status: "",
+          },
+          pulang: {
+            jam: "",
+          },
+        },
+      };
+      el.absensi = defaultAbsensi;
+      await FIREBASE.updateDB(`siswa/${el.id}`, el);
+    });
+  }
+}, 1000);
 
 (async () => {
   try {
@@ -58,15 +135,15 @@ const CONTROLLER = new Controller(FIREBASE, WA, HELPER);
         status: 200,
         url: d.url,
       });
-      unlinkSync(d.name_file)
+      unlinkSync(d.name_file);
     });
     app.get("/qr", (req, res) => {
-      if(!WA.isReady) {
+      if (!WA.isReady) {
         res.send(`<img src="${WA.qrBase64}" width="150" height="150">`);
       } else {
         res.json({
           status: 403,
-          message: "WhatsApp already signed in."
+          message: "WhatsApp already signed in.",
         });
       }
     });

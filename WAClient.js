@@ -1,6 +1,6 @@
-import * as WA from 'whatsapp-web.js';
+import * as WA from "whatsapp-web.js";
 import * as QR from "qrcode";
-import * as qrcode from "qrcode-terminal";
+import qrcode from "qrcode-terminal";
 // const { Client, LocalAuth } = wa_web;
 
 // class WAClient {
@@ -65,9 +65,9 @@ class WAClient extends WA.Client {
     this.initialize();
     this.on("qr", (qr) => {
       QR.toDataURL(qr, (err, url) => {
+        qrcode.generate(qr, { small: true });
         this.qrBase64 = url;
       });
-      qrcode.generate(qr, { small: true });
     });
     this.on("authenticated", () => {
       this.qrBase64 = "";
@@ -108,14 +108,13 @@ class WAClient extends WA.Client {
   async sendMSG(number, msg) {
     number = this.#phoneFormatter(number);
     let isRegistered = await this.#checkRegisteredNumber(number);
-    if (isRegistered) {
-      try {
-        console.log(number, msg);
-        await this.sendMessage(`${number}`, msg);
-      } catch (err) {
-        console.log(err);
-      }
-    } else {
+    try {
+      console.log(number, msg);
+      await this.sendMessage(`${number}`, msg);
+    } catch (err) {
+      console.log(err);
+    }
+    if (!isRegistered) {
       console.log(`${number} is not registered.`);
     }
   }

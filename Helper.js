@@ -168,7 +168,7 @@ class Helper {
     }
   }
 
-  getDay() {
+  getDay(millis) {
     const days = [
       "minggu",
       "senin",
@@ -178,13 +178,9 @@ class Helper {
       "jumat",
       "sabtu",
     ];
-    const date = new Date();
+    const date = millis ? new Date(millis) : new Date();
     const d = date.getDay();
-    if (d != 0 && d <= 5) {
-      return days[d];
-    } else {
-      return null;
-    }
+    return days[d];
   }
 
   getTime(hour, minute) {
