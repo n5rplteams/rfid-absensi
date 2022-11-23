@@ -144,6 +144,11 @@ setInterval(async () => {
       });
       unlinkSync(d.name_file);
     });
+    app.get("/save-csv", async (req, res) => {
+      const d = await CONTROLLER.saveCSV();
+      res.send(d.file);
+      unlinkSync(d.name_file);
+    });
     app.get("/qr", (req, res) => {
       if (!WA.isReady) {
         res.send(`<img src="${WA.qrBase64}" width="150" height="150">`);

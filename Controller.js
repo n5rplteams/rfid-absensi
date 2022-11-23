@@ -130,7 +130,9 @@ class Controller {
         } else {
           text = `*Siswa atas nama*\n${userData.nama} dari kelas ${
             userData.kelas
-          }\nTelah absen pada hari ${this.Helper.getDay()} jam ${time.getHours()}:${time.getMinutes()}.\nStatus absen: *${status == 1 ? "Tepat Waktu" : "Telat"}*`.trim();
+          }\nTelah absen pada hari ${this.Helper.getDay()} jam ${time.getHours()}:${time.getMinutes()}.\nStatus absen: *${
+            status == 1 ? "Tepat Waktu" : "Telat"
+          }*`.trim();
         }
 
         if (userData.tel_atasan) {
@@ -239,6 +241,74 @@ class Controller {
       url:
         "data:text/csv;base64," +
         fs.readFileSync(`${nameFile}.csv`, "base64url"),
+    };
+    // form.append(file, "");
+  }
+
+  async saveCSV() {
+    let get = Object.values(await this.Firebase.getDB("siswa"));
+    let laporanJSON = get.map((el) => {
+      return {
+        id: el.id,
+        nama: el.nama,
+        kelas: el.kelas,
+        senin: {
+          tanggal: el.absensi?.senin?.hadir?.tanggal ?? "-",
+          "jam-hadir": el.absensi?.senin?.hadir?.jam ?? "-",
+          status: el.absensi?.senin?.hadir?.status ?? "-",
+          "jam-pulang": el.absensi?.senin?.pulang.jam ?? "-",
+        },
+        selasa: {
+          tanggal: el.absensi?.selasa?.hadir?.tanggal ?? "-",
+          "jam-hadir": el.absensi?.selasa?.hadir?.jam ?? "-",
+          status: el.absensi?.selasa?.hadir?.status ?? "-",
+          "jam-pulang": el.absensi?.selasa?.pulang.jam ?? "-",
+        },
+        rabu: {
+          tanggal: el.absensi?.rabu?.hadir?.tanggal ?? "-",
+          "jam-hadir": el.absensi?.rabu?.hadir?.jam ?? "-",
+          status: el.absensi?.rabu?.hadir?.status ?? "-",
+          "jam-pulang": el.absensi?.rabu?.pulang.jam ?? "-",
+        },
+        kamis: {
+          tanggal: el.absensi?.kamis?.hadir?.tanggal ?? "-",
+          "jam-hadir": el.absensi?.kamis?.hadir?.jam ?? "-",
+          status: el.absensi?.kamis?.hadir?.status ?? "-",
+          "jam-pulang": el.absensi?.kamis?.pulang.jam ?? "-",
+        },
+        jumat: {
+          tanggal: el.absensi?.jumat?.hadir?.tanggal ?? "-",
+          "jam-hadir": el.absensi?.jumat?.hadir?.jam ?? "-",
+          status: el.absensi?.jumat?.hadir?.status ?? "-",
+          "jam-pulang": el.absensi?.jumat?.pulang.jam ?? "-",
+        },
+        sabtu: {
+          tanggal: el.absensi?.sabtu?.hadir?.tanggal ?? "-",
+          "jam-hadir": el.absensi?.sabtu?.hadir?.jam ?? "-",
+          status: el.absensi?.sabtu?.hadir?.status ?? "-",
+          "jam-pulang": el.absensi?.sabtu?.pulang.jam ?? "-",
+        },
+      };
+    });
+
+    let laporanCSV =
+      "id,nama,kelas,senin,,,,selasa,,,,rabu,,,,kamis,,,,jumat,,,,sabtu,,,,\n";
+    laporanCSV +=
+      ",,," + "tanggal,jam-hadir,status,jam-pulang,".repeat(6) + "\n";
+    laporanJSON.forEach((el) => {
+      laporanCSV += `"${el.id}","${el.nama}","${el.kelas}","${el.senin.tanggal}","${el.senin["jam-hadir"]}","${el.senin.status}","${el.senin["jam-pulang"]}","${el.selasa.tanggal}","${el.selasa["jam-hadir"]}","${el.selasa.status}","${el.selasa["jam-pulang"]}","${el.rabu.tanggal}","${el.rabu["jam-hadir"]}","${el.rabu.status}","${el.rabu["jam-pulang"]}","${el.kamis.tanggal}","${el.kamis["jam-hadir"]}","${el.kamis.status}","${el.senin["jam-pulang"]}","${el.jumat.tanggal}","${el.jumat["jam-hadir"]}","${el.jumat.status}","${el.jumat["jam-pulang"]}","${el.sabtu.tanggal}","${el.sabtu["jam-hadir"]}","${el.sabtu.status}","${el.sabtu["jam-pulang"]}",\n`;
+    });
+    let nameFile = join(process.cwd(), "report", `${Date.now()}`);
+
+    if (!fs.existsSync(join(process.cwd(), "report"))) {
+      fs.mkdirSync(join(process.cwd(), "report"));
+    }
+
+    fs.writeFileSync(`${nameFile}.csv`, laporanCSV);
+
+    return {
+      name_file: `${nameFile}.csv`,
+      file: fs.readFileSync(`${nameFile}.csv`),
     };
     // form.append(file, "");
   }
